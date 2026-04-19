@@ -23,8 +23,8 @@ export function Hero() {
             </AppText>
           </div>
 
-          <div className="lg:col-span-3 flex flex-col items-end gap-5 lg:pt-4 text-right">
-            <AppText className="text-sm text-grey-950 leading-relaxed">
+          <div className="lg:col-span-3 flex flex-col items-start lg:items-end gap-5 lg:pt-4 text-left lg:text-right">
+            <AppText className="text-sm text-grey-950 leading-relaxed max-w-md lg:max-w-none">
               Trees help create a more stable climate, promote biodiversity and
               benefit people. After all, without trees, there would be no
               oxygen, no cooling effect and no clean air.
@@ -44,7 +44,7 @@ export function Hero() {
         </div>
 
         <div className="relative mt-8">
-          <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-2xl overflow-hidden">
+          <div className="relative h-[280px] sm:h-[420px] md:h-[480px] lg:h-[520px] w-full rounded-2xl overflow-hidden">
             <Image
               src="/hero_bg.png"
               alt="Young tree sapling planted in a field of grass"
@@ -60,14 +60,14 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="sm:hidden mt-6">
+        <div className="sm:hidden mt-6 flex justify-center">
           <PaymentCard />
         </div>
 
         <div className="mt-6 flex items-center justify-center">
-          <AppText className="text-xs tracking-[0.2em] text-grey-400">
-            MINT NFTS
-          </AppText>
+          <span className="inline-flex items-center justify-center h-8 px-5 rounded-full border border-grey-300 text-[10px] font-semibold tracking-[0.2em] text-grey-950">
+            ABOUT US
+          </span>
         </div>
       </div>
     </section>
