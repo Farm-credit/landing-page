@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { ArrowDown, Check } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { AppText } from "@/components/atoms/AppText";
+import { PaymentCard } from "./PaymentCard";
 
 export function Hero() {
   return (
@@ -42,8 +43,8 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative mt-8 rounded-2xl overflow-hidden">
-          <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] w-full">
+        <div className="relative mt-8">
+          <div className="relative h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-2xl overflow-hidden">
             <Image
               src="/hero_bg.png"
               alt="Young tree sapling planted in a field of grass"
@@ -54,7 +55,7 @@ export function Hero() {
             />
           </div>
 
-          <div className="absolute bottom-6 right-6 hidden sm:block">
+          <div className="absolute top-48 right-6 hidden sm:block">
             <PaymentCard />
           </div>
         </div>
@@ -73,57 +74,3 @@ export function Hero() {
   );
 }
 
-function PaymentCard() {
-  return (
-    <div className="w-[320px] rounded-2xl bg-white shadow-xl p-5 space-y-4">
-      <div>
-        <AppText className="text-[11px] font-medium tracking-wide text-grey-500">
-          Plant Number of Trees
-        </AppText>
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          <button className="h-9 rounded-md bg-lime-400 text-grey-950 text-sm font-semibold">
-            5
-          </button>
-          <button className="h-9 rounded-md bg-grey-100 text-grey-700 text-sm font-medium">
-            10
-          </button>
-          <button className="h-9 rounded-md bg-grey-100 text-grey-700 text-sm font-medium">
-            20
-          </button>
-        </div>
-      </div>
-
-      <div>
-        <AppText className="text-[11px] font-medium tracking-wide text-grey-500">
-          Choose Your Contribution Amount
-        </AppText>
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          <button className="h-9 rounded-md bg-lime-400 text-grey-950 text-sm font-semibold">
-            $25
-          </button>
-          <button className="h-9 rounded-md bg-grey-100 text-grey-700 text-sm font-medium">
-            $50
-          </button>
-          <button className="h-9 rounded-md bg-grey-100 text-grey-700 text-sm font-medium">
-            $100
-          </button>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 rounded-md border border-grey-200 px-3 py-2">
-          <Check size={14} className="text-lime-500" />
-          <span className="text-xs text-grey-700">Pay with Crypto</span>
-        </div>
-        <div className="flex items-center gap-2 rounded-md border border-grey-200 px-3 py-2">
-          <Check size={14} className="text-grey-400" />
-          <span className="text-xs text-grey-700">Pay with Card</span>
-        </div>
-      </div>
-
-      <button className="w-full h-10 rounded-md bg-lime-400 text-grey-950 text-sm font-semibold hover:bg-lime-300 transition-colors">
-        CONTRIBUTE NOW
-      </button>
-    </div>
-  );
-}
