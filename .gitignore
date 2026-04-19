@@ -40,3 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 *_x.md
+
+# ai tooling
+CLAUDE.md
+AGENTS.md
+.claude/
+
+# design references
+Farmcredit.png
+required.png
