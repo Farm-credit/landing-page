@@ -36,7 +36,7 @@ export function Hero() {
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-grey-950 text-white transition-transform group-hover:translate-y-0.5">
                 <ArrowDown size={14} strokeWidth={2.5} />
               </span>
-              <span className="text-xs font-bold tracking-[0.1em] text-grey-950">
+              <span className="text-xs font-bold tracking-widest text-grey-950">
                 LEARN MORE
               </span>
             </a>
