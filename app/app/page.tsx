@@ -75,7 +75,6 @@ export default function RetirePage() {
       const contractErrorMatch = (err.message || "").match(/Error\(Contract, #(\d+)\)/);
       if (contractErrorMatch) {
          const code = parseInt(contractErrorMatch[1]);
-         // @ts-expect-error - Errors is from generated bindings and indexing might not be strictly typed
          // eslint-disable-next-line @typescript-eslint/no-explicit-any
          const errorDef = (Errors as any)[code];
          if (errorDef) {

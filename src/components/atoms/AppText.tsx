@@ -21,7 +21,8 @@ export const AppText = forwardRef<HTMLElement, AppTextProps>(
   ) => {
     return (
       <Component
-        ref={ref as React.ForwardedRef<HTMLElement>}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ref={ref as any}
         className={cn(
           {
             "text-5xl font-bold tracking-tight": variant === "display",
