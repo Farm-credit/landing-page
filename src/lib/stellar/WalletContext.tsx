@@ -120,19 +120,16 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
             ? String((error as { message: unknown }).message)
             : "Unknown connection error";
 
-      // Don't throw for user-initiated close
-      if (errorMessage.includes("closed the modal")) {
+      // Don't throw for user-initiated close or empty modal dismissal
+      if (
+        errorMessage.includes("closed the modal") ||
+        errorMessage.includes("no elements in sequence")
+      ) {
         return;
       }
 
-      throw new Error(
-        errorMessage.toLowerCase().includes("not installed")
-          ? "Wallet extension is not detected. Please install it or ensure it's enabled."
-          : errorMessage.toLowerCase().includes("user rejected") ||
-              errorMessage.toLowerCase().includes("permission denied")
-            ? "Connection request was rejected by the user."
-            : `Failed to connect wallet: ${errorMessage}`,
-      );
+      console.error("Wallet connection error:", errorMessage);
+      // Don't re-throw - let the UI handle it gracefully
     } finally {
       setIsConnecting(false);
     }

@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${workSans.variable} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} ${workSans.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         <WalletProvider>
           {children}
