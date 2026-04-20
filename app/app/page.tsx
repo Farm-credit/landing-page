@@ -57,7 +57,12 @@ export default function RetirePage() {
       const retireToast = toast.loading("Processing retirement...");
       
       await carbonService.retireCredits(address, retireAmount, async (tx) => {
-        const result = await tx.signAndSend({ signTransaction, publicKey: address });
+        const result = await tx.signAndSend({
+          signTransaction: async (xdr: string) => {
+            return { signedTxXdr: await signTransaction(xdr) };
+          },
+          publicKey: address,
+        });
         return result;
       });
 
@@ -107,7 +112,12 @@ export default function RetirePage() {
       const mintToast = toast.loading("Minting test credits...");
       
       await carbonService.mintCredits(address, mintAmount, async (tx) => {
-        const result = await tx.signAndSend({ signTransaction, publicKey: address });
+        const result = await tx.signAndSend({
+          signTransaction: async (xdr: string) => {
+            return { signedTxXdr: await signTransaction(xdr) };
+          },
+          publicKey: address,
+        });
         return result;
       });
 
@@ -134,7 +144,7 @@ export default function RetirePage() {
           Connect Your Wallet
         </AppText>
         <AppText className="text-grey-600 max-w-sm mb-8">
-          Please connect your Freighter wallet to view your carbon credit balance and claim your retirement certificates.
+          Connect your Stellar wallet to view your carbon credit balance and claim your retirement certificates.
         </AppText>
         <Button 
           size="lg" 
@@ -143,7 +153,7 @@ export default function RetirePage() {
           className="bg-lime-400 hover:bg-lime-500 text-grey-950 font-semibold rounded-full px-8"
         >
           {isConnecting ? <Loader2 className="animate-spin mr-2" /> : null}
-          Connect Freighter
+          Connect Wallet
         </Button>
       </div>
     );
