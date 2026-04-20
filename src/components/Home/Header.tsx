@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, X, Wallet } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useWallet } from "@/lib/stellar/WalletContext";
 import { Button } from "@/components/atoms/Button";
 
@@ -14,7 +15,17 @@ const navLinks = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { address, connect } = useWallet();
+  const pathname = usePathname();
+  const { address, connect, disconnect } = useWallet();
+  const isAppRoute = pathname === "/app" || pathname.startsWith("/app/");
+
+  const handleAction = () => {
+    if (address) {
+      disconnect();
+    } else {
+      connect();
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
@@ -40,35 +51,23 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            {address ? (
-              <div className="flex items-center gap-2 px-4 py-2 bg-grey-100 rounded-full border border-grey-200">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-xs font-bold text-grey-950">
-                  {address.slice(0, 4)}...{address.slice(-4)}
-                </span>
-                <Link 
-                  href="/app"
-                  className="ml-2 text-[10px] font-black uppercase tracking-widest text-lime-600 hover:text-lime-700"
-                >
-                  Dashboard
-                </Link>
-              </div>
-            ) : (
-              <Button 
-                onClick={connect}
-                variant="outline"
-                className="h-11 px-6 rounded-full border-2 border-grey-950 text-grey-950 font-bold hover:bg-grey-50"
-              >
-                Connect Wallet
-              </Button>
-            )}
 
-            <Link
-              href="/app"
-              className="inline-flex items-center justify-center h-11 px-7 rounded-full bg-grey-950 text-white text-sm font-semibold hover:bg-grey-800 transition-colors"
-            >
-              Launch App
-            </Link>
+
+            {isAppRoute ? (
+              <Button
+                onClick={handleAction}
+                className="inline-flex items-center justify-center h-11 px-7 rounded-full bg-grey-950 text-white text-sm font-semibold hover:bg-grey-800 transition-colors"
+              >
+                {address ? "Sign Out" : "Sign In"}
+              </Button>
+            ) : (
+              <Link
+                href="/app"
+                className="inline-flex items-center justify-center h-11 px-7 rounded-full bg-grey-950 text-white text-sm font-semibold hover:bg-grey-800 transition-colors"
+              >
+                Launch App
+              </Link>
+            )}
           </div>
 
           <button
@@ -94,12 +93,25 @@ export function Header() {
               </a>
             ))}
           </div>
-          <Link
-            href="/app"
-            className="inline-flex items-center justify-center w-full h-11 rounded-full bg-grey-950 text-white text-sm font-semibold"
-          >
-            Launch App
-          </Link>
+          {isAppRoute ? (
+            <Button
+              onClick={() => {
+                handleAction();
+                setIsOpen(false);
+              }}
+              className="inline-flex items-center justify-center w-full h-11 rounded-full bg-grey-950 text-white text-sm font-semibold"
+            >
+              {address ? "Sign Out" : "Sign In"}
+            </Button>
+          ) : (
+            <Link
+              href="/app"
+              onClick={() => setIsOpen(false)}
+              className="inline-flex items-center justify-center w-full h-11 rounded-full bg-grey-950 text-white text-sm font-semibold"
+            >
+              Launch App
+            </Link>
+          )}
         </div>
       )}
     </header>
