@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowRight, DollarSign } from "lucide-react";
 import { AppText } from "@/components/atoms/AppText";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type DonationType = "monthly" | "onetime";
 
@@ -21,7 +22,7 @@ export function PaymentCard() {
   return (
     <div className="w-full max-w-[350px] rounded-2xl bg-white ring-1 ring-grey-200 shadow-sm p-4 sm:p-6 space-y-3.5">
       <AppText className="text-center text-sm font-medium text-grey-950">
-        Plant change with us
+        Retire credits and claim your impact
       </AppText>
 
       <div className="grid grid-cols-2 rounded-full bg-grey-100 p-1.5 gap-1">
@@ -94,10 +95,13 @@ export function PaymentCard() {
         </span>
       </label>
 
-      <button className="inline-flex w-full items-center justify-center gap-2 h-11 rounded-full bg-lime-400 text-sm font-semibold text-grey-950 hover:bg-lime-300 transition-colors">
-        Donate Now!
+      <Link 
+        href="/app"
+        className="inline-flex w-full items-center justify-center gap-2 h-11 rounded-full bg-lime-400 text-sm font-semibold text-grey-950 hover:bg-lime-300 transition-colors"
+      >
+        Retire Credits
         <ArrowRight size={16} />
-      </button>
+      </Link>
     </div>
   );
 }

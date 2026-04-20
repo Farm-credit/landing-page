@@ -1,14 +1,34 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Leaf } from "lucide-react";
 import { AppText } from "@/components/atoms/AppText";
 import { PaymentCard } from "./PaymentCard";
+import { carbonService } from "@/services/carbon.service";
 
 export function Hero() {
+  const [totalRetired, setTotalRetired] = useState<bigint>(0n);
+
+  useEffect(() => {
+    const fetchTotal = async () => {
+      const total = await carbonService.getTotalRetired();
+      setTotalRetired(total);
+    };
+    fetchTotal();
+  }, []);
+
   return (
     <section className="relative bg-white">
       <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-9">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-lime-50 rounded-full border border-lime-100 mb-6">
+              <Leaf size={12} className="text-lime-600" />
+              <AppText className="text-[10px] font-black text-lime-700 uppercase tracking-[0.2em]">
+                Total Impact: {(Number(totalRetired) / 10**7).toLocaleString()} Tons Offset
+              </AppText>
+            </div>
             <AppText
               as="h1"
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.25rem] font-extrabold tracking-tight leading-[1.02] text-grey-950"

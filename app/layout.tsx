@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Work_Sans } from "next/font/google";
 import "./globals.css";
+import { WalletProvider } from "@/lib/stellar/WalletContext";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${workSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        {children}
+        <WalletProvider>
+          {children}
+          <Toaster richColors position="bottom-right" />
+        </WalletProvider>
       </body>
     </html>
   );
