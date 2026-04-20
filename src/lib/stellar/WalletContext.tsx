@@ -9,6 +9,7 @@ interface WalletContextType {
   disconnect: () => void;
   isConnecting: boolean;
   error: string | null;
+  signTransaction: typeof signTransaction;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -56,7 +57,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <WalletContext.Provider value={{ address, connect, disconnect, isConnecting, error }}>
+    <WalletContext.Provider value={{ address, connect, disconnect, isConnecting, error, signTransaction }}>
       {children}
     </WalletContext.Provider>
   );

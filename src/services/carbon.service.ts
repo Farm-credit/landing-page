@@ -66,6 +66,30 @@ export class CarbonService {
       amount,
       _report_hash: reportHash,
       _methodology: methodology,
+    }, {
+      // @ts-ignore - publicKey is supported by underlying ContractClient but not always typed in generated bindings
+      publicKey: from
+    });
+
+    return await signAndSend(tx);
+  }
+
+  /**
+   * Mints test credits for the user.
+   * Note: The caller must be authorized as a verifier in the contract.
+   */
+  async mintCredits(to: string, amount: bigint, signAndSend: (tx: any) => Promise<any>) {
+    const reportHash = Buffer.from(Date.now().toString());
+    
+    // Using user address as both 'to' and 'verifier'
+    const tx = await this.client.mint({
+      verifier: to,
+      to,
+      amount,
+      report_hash: reportHash,
+    }, {
+      // @ts-ignore
+      publicKey: to
     });
 
     return await signAndSend(tx);

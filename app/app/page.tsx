@@ -8,13 +8,15 @@ import { Button } from "@/components/atoms/Button";
 import { toast } from "sonner";
 import { Leaf, History, Award, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Errors } from "@/lib/contracts/carbon_token/src";
 
 export default function RetirePage() {
-  const { address, connect, isConnecting } = useWallet();
+  const { address, connect, isConnecting, signTransaction } = useWallet();
   const [balance, setBalance] = useState<bigint>(0n);
   const [amount, setAmount] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
   const [certificates, setCertificates] = useState<any[]>([]);
 
   const fetchDetails = async () => {
@@ -44,11 +46,17 @@ export default function RetirePage() {
     setIsSubmitting(true);
     const retireAmount = BigInt(Math.floor(Number(amount) * 10 ** 7)); // Assuming 7 decimals based on typical Soroban tokens
     
+    if (retireAmount > balance) {
+      toast.error(`Insufficient balance. You have ${(Number(balance) / 10**7).toLocaleString()} tokens available.`);
+      setIsSubmitting(false);
+      return;
+    }
+    
     try {
       const retireToast = toast.loading("Processing retirement...");
       
       await carbonService.retireCredits(address, retireAmount, async (tx) => {
-        const result = await tx.signAndSend();
+        const result = await tx.signAndSend({ signTransaction, publicKey: address });
         return result;
       });
 
@@ -58,10 +66,57 @@ export default function RetirePage() {
       setAmount("");
       fetchDetails();
     } catch (error: any) {
-      console.error(error);
-      toast.error(error.message || "Failed to retire credits. Please try again.");
+      console.error("Retirement error:", error);
+      let message = error.message || "Failed to retire credits. Please try again.";
+      
+      // Parse Soroban contract error codes
+      const contractErrorMatch = error.message?.match(/Error\(Contract, #(\d+)\)/);
+      if (contractErrorMatch) {
+         const code = parseInt(contractErrorMatch[1]);
+         const errorDef = (Errors as any)[code];
+         if (errorDef) {
+           const friendlyMessages: Record<string, string> = {
+             "InsufficientBalance": "You don't have enough carbon credits for this transaction.",
+             "NegativeAmount": "Amount must be positive.",
+             "ZeroRetirementAmount": "Please enter an amount greater than zero.",
+             "Blacklisted": "Your account is currently restricted from retiring credits.",
+             "Unauthorized": "You are not authorized to retire these credits.",
+             "ReportHashUsed": "This retirement appears to be a duplicate."
+           };
+           message = friendlyMessages[errorDef.message] || errorDef.message;
+         }
+      } else if (error.message?.includes("User declined") || error.message?.includes("declined the transaction")) {
+        message = "Transaction cancelled.";
+      }
+      
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleMint = async () => {
+    if (!address) return;
+    setIsMinting(true);
+    const mintAmount = 100n * 10n**7n;
+    
+    try {
+      const mintToast = toast.loading("Minting test credits...");
+      
+      await carbonService.mintCredits(address, mintAmount, async (tx) => {
+        const result = await tx.signAndSend({ signTransaction, publicKey: address });
+        return result;
+      });
+
+      toast.success("100 Carbon Credits minted successfully for testing!", {
+        id: mintToast,
+      });
+      fetchDetails();
+    } catch (error: any) {
+      console.error("Mint error:", error);
+      toast.error(error.message || "Failed to mint credits. Please check if your address is an authorized verifier.");
+    } finally {
+      setIsMinting(false);
     }
   };
 
@@ -234,6 +289,15 @@ export default function RetirePage() {
              </div>
              <div className="h-2 w-2 rounded-full bg-green-600 animate-pulse"></div>
           </div>
+
+          <Button 
+            onClick={handleMint}
+            disabled={isMinting}
+            className="w-full mt-4 h-10 bg-white/40 hover:bg-white/60 text-grey-950 text-[10px] font-black uppercase tracking-widest rounded-xl border border-white/60 transition-all active:scale-[0.98]"
+          >
+            {isMinting ? <Loader2 className="animate-spin mr-2" size={14} /> : <Award className="mr-2" size={14} />}
+            Mint 100 Test Credits
+          </Button>
         </div>
       </div>
     </div>
