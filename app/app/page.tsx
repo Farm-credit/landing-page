@@ -1,25 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useWallet } from "@/lib/stellar/WalletContext";
 import { carbonService } from "@/services/carbon.service";
 import { AppText } from "@/components/atoms/AppText";
 import { Button } from "@/components/atoms/Button";
 import { toast } from "sonner";
 import { Leaf, History, Award, ArrowRight, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Errors } from "@/lib/contracts/carbon_token/src";
+
+import { Errors, CertificateRecord } from "@/lib/contracts/carbon_token/src";
 
 export default function RetirePage() {
   const { address, connect, isConnecting, signTransaction } = useWallet();
   const [balance, setBalance] = useState<bigint>(0n);
   const [amount, setAmount] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false); // Prefixed with underscore or removed if not needed, keeping set for now
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
-  const [certificates, setCertificates] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<CertificateRecord[]>([]);
 
-  const fetchDetails = async () => {
+  const fetchDetails = useCallback(async () => {
     if (!address) return;
     setIsLoading(true);
     try {
@@ -34,11 +34,12 @@ export default function RetirePage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [address]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDetails();
-  }, [address]);
+  }, [fetchDetails]); // Added fetchDetails as dependency
 
   const handleRetire = async () => {
     if (!address || !amount || isNaN(Number(amount))) return;
@@ -65,14 +66,17 @@ export default function RetirePage() {
       });
       setAmount("");
       fetchDetails();
-    } catch (error: any) {
-      console.error("Retirement error:", error);
-      let message = error.message || "Failed to retire credits. Please try again.";
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("Retirement error:", err);
+      let message = err.message || "Failed to retire credits. Please try again.";
       
       // Parse Soroban contract error codes
-      const contractErrorMatch = error.message?.match(/Error\(Contract, #(\d+)\)/);
+      const contractErrorMatch = (err.message || "").match(/Error\(Contract, #(\d+)\)/);
       if (contractErrorMatch) {
          const code = parseInt(contractErrorMatch[1]);
+         // @ts-expect-error - Errors is from generated bindings and indexing might not be strictly typed
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
          const errorDef = (Errors as any)[code];
          if (errorDef) {
            const friendlyMessages: Record<string, string> = {
@@ -85,7 +89,7 @@ export default function RetirePage() {
            };
            message = friendlyMessages[errorDef.message] || errorDef.message;
          }
-      } else if (error.message?.includes("User declined") || error.message?.includes("declined the transaction")) {
+      } else if ((err.message || "").includes("User declined") || (err.message || "").includes("declined the transaction")) {
         message = "Transaction cancelled.";
       }
       
@@ -112,9 +116,10 @@ export default function RetirePage() {
         id: mintToast,
       });
       fetchDetails();
-    } catch (error: any) {
-      console.error("Mint error:", error);
-      toast.error(error.message || "Failed to mint credits. Please check if your address is an authorized verifier.");
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("Mint error:", err);
+      toast.error(err.message || "Failed to mint credits. Please check if your address is an authorized verifier.");
     } finally {
       setIsMinting(false);
     }

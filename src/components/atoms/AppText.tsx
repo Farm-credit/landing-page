@@ -21,7 +21,7 @@ export const AppText = forwardRef<HTMLElement, AppTextProps>(
   ) => {
     return (
       <Component
-        ref={ref as any}
+        ref={ref as React.ForwardedRef<HTMLElement>}
         className={cn(
           {
             "text-5xl font-bold tracking-tight": variant === "display",

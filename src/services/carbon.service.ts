@@ -55,6 +55,7 @@ export class CarbonService {
    * Retires credits for the user.
    * Note: The actual signing happens via the wallet (Freighter).
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async retireCredits(from: string, amount: bigint, signAndSend: (tx: any) => Promise<any>) {
     // Generate a unique report hash for this UI-triggered retirement
     // In a real app, this might come from a specific audit log
@@ -67,7 +68,7 @@ export class CarbonService {
       _report_hash: reportHash,
       _methodology: methodology,
     }, {
-      // @ts-ignore - publicKey is supported by underlying ContractClient but not always typed in generated bindings
+      // @ts-expect-error - publicKey is supported by underlying ContractClient but not always typed in generated bindings
       publicKey: from
     });
 
@@ -78,6 +79,7 @@ export class CarbonService {
    * Mints test credits for the user.
    * Note: The caller must be authorized as a verifier in the contract.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async mintCredits(to: string, amount: bigint, signAndSend: (tx: any) => Promise<any>) {
     const reportHash = Buffer.from(Date.now().toString());
     
@@ -88,7 +90,7 @@ export class CarbonService {
       amount,
       report_hash: reportHash,
     }, {
-      // @ts-ignore
+      // @ts-expect-error - publicKey is supported by underlying ContractClient but not always typed in generated bindings
       publicKey: to
     });
 
