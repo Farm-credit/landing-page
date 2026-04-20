@@ -19,12 +19,12 @@ export function PaymentCard() {
   const [amount, setAmount] = useState<number>(10);
 
   return (
-    <div className="w-full max-w-[340px] rounded-2xl bg-white ring-1 ring-grey-200 shadow-sm p-4 sm:p-5 space-y-3.5">
+    <div className="w-full max-w-[350px] rounded-2xl bg-white ring-1 ring-grey-200 shadow-sm p-4 sm:p-6 space-y-3.5">
       <AppText className="text-center text-sm font-medium text-grey-950">
         Plant change with us
       </AppText>
 
-      <div className="grid grid-cols-2 rounded-full bg-grey-100 p-1 gap-1">
+      <div className="grid grid-cols-2 rounded-full bg-grey-100 p-1.5 gap-1">
         {tabs.map((t) => (
           <button
             key={t.value}
@@ -32,10 +32,10 @@ export function PaymentCard() {
             onClick={() => setTab(t.value)}
             aria-pressed={tab === t.value}
             className={cn(
-              "h-9 rounded-full px-2 text-xs whitespace-nowrap transition-colors",
+              " rounded-full p-3  text-xs whitespace-nowrap transition-colors",
               tab === t.value
                 ? "bg-lime-400 font-semibold text-grey-950"
-                : "font-medium text-grey-950 hover:bg-grey-200"
+                : "font-medium text-grey-950 hover:bg-grey-200",
             )}
           >
             {t.label}
@@ -58,7 +58,7 @@ export function PaymentCard() {
                 "h-9 rounded-full text-xs transition-colors",
                 amount === a
                   ? "bg-lime-400 border border-grey-950 font-semibold text-grey-950"
-                  : "border border-grey-200 font-medium text-grey-950 hover:border-grey-400"
+                  : "border border-grey-200 font-medium text-grey-950 hover:border-grey-400",
               )}
             >
               ${a}

@@ -6,7 +6,7 @@ import { PaymentCard } from "./PaymentCard";
 export function Hero() {
   return (
     <section className="relative bg-white">
-      <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+      <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-9">
             <AppText
@@ -55,16 +55,12 @@ export function Hero() {
             />
           </div>
 
-          <div className="absolute top-48 right-6 hidden sm:block">
+          <div className="absolute top-24 inset-x-0 flex justify-center sm:inset-x-auto sm:right-6 sm:top-48 sm:block">
             <PaymentCard />
           </div>
         </div>
 
-        <div className="sm:hidden mt-6 flex justify-center">
-          <PaymentCard />
-        </div>
-
-        <div className="mt-6 flex items-center justify-center">
+        <div className="mt-60 sm:mt-6 flex items-center justify-center">
           <span className="inline-flex items-center justify-center h-8 px-5 rounded-full border border-grey-300 text-[10px] font-semibold tracking-[0.2em] text-grey-950">
             ABOUT US
           </span>
@@ -73,4 +69,3 @@ export function Hero() {
     </section>
   );
 }
-
