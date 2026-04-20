@@ -30,13 +30,12 @@ const pillars: {
 export function Solutions() {
   return (
     <section id="about" className="bg-white py-16 sm:py-24">
-      <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
         <AppText
           as="h2"
           className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-center text-grey-950 max-w-5xl mx-auto leading-tight"
         >
-          WE DON&rsquo;T JUST FUND{" "}
-          <span className="text-teal-800">TREES &mdash;</span>
+          WE DON&rsquo;T JUST FUND <span className="text-teal-800">TREES </span>
           <br className="hidden sm:block" /> WE BUILD{" "}
           <span className="text-lime-400">SUSTAINABLE</span> IMPACT.
         </AppText>
@@ -80,8 +79,8 @@ function PillarIcon({ variant }: { variant: IconVariant }) {
     variant === "blockchain"
       ? "bg-teal-800"
       : variant === "farmer"
-      ? "bg-white border-2 border-teal-800"
-      : "striped";
+        ? "bg-white border-2 border-teal-800"
+        : "striped";
   const right = variant === "privacy" ? "bg-teal-800" : "striped";
 
   return (
